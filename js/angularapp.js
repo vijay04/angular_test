@@ -1,0 +1,1 @@
+var angularApp=angular.module("angularApp",[]);angularApp.controller("angularAppCtrl",["$scope","$http",function(a,b){a.loadItems=function(){b.get(base_url+"json/items.json").success(function(b){a.items=b})}}]);
