@@ -1,10 +1,26 @@
 var angularApp = angular.module('angularApp', []);
 
-angularApp.controller('angularAppCtrl', ['$scope', '$http', '$location', function($scope,  $http, $location) {
-  var base_url = $location.$$absUrl;
+angularApp.factory('shareditems', ['$http', '$rootScope', '$location', function($http, $rootScope, $location) {
+  var items = [];
+	
+  return {
+    getItems: function() {
+    	var base_url = $location.$$absUrl;
+      return $http.get(base_url + 'json/items.json').then(function (response) {
+        items = response.data;
+        $rootScope.$broadcast('handleItemsBroadcast', items);
+        return items;
+      });
+    },
+    
+  };
+}]);
+
+angularApp.controller('angularAppCtrl', ['$scope','shareditems', function($scope, shareditems) {
+  
   $scope.loadItems = function() {
-    $http.get(base_url + 'json/items.json').success(function (response) {
-      $scope.items = response;
-    });
+    shareditems.getItems().then(function(items) {
+    	$scope.items = items;
+  	});
   };
 }]);
